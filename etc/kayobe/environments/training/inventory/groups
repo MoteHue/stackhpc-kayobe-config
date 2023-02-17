@@ -1,0 +1,10 @@
+[storage]
+
+[mons:children]
+storage
+
+[mgrs:children]
+storage
+
+[osds:children]
+storage

@@ -6,7 +6,7 @@ set -eu
 ##########################################################################
 
 # These parameters must be changed to your own fork 
-KAYOBE_CONFIG_REPO="https://github.com/example/stackhpc-kayobe-config"
+KAYOBE_CONFIG_REPO="https://github.com/motehue/stackhpc-kayobe-config"
 KAYOBE_CONFIG_BRANCH=stackhpc/yoga
 
 ##########################################################################

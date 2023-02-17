@@ -14,3 +14,7 @@ overcloud_group_hosts_map:
   compute:
     - compute0
     - compute1
+  storage:
+    - storage0
+    - storage1
+    - storage2

@@ -11,3 +11,8 @@ openstack_service_rpc_workers: "1"
 
 # Elasticsearch memory tuning
 es_heap_size: 1g
+
+# Ceph backends
+cinder_backend_ceph: true
+glance_backend_ceph: true
+nova_backend_ceph: true
