@@ -8,3 +8,6 @@ storage
 
 [osds:children]
 storage
+
+[monitoring:children]
+controllers

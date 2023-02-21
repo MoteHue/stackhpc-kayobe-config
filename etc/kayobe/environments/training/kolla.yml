@@ -9,9 +9,9 @@ kolla_overcloud_inventory_custom_services: "{{ lookup('template', kayobe_env_con
 
 ###############################################################################
 # Kolla feature flag configuration.
-kolla_enable_central_logging: false
-kolla_enable_prometheus: false
-kolla_enable_grafana: false
-kolla_enable_elasticsearch_curator: false
+kolla_enable_central_logging: true
+kolla_enable_prometheus: true
+kolla_enable_grafana: true
+kolla_enable_elasticsearch_curator: true
 
 kolla_enable_cinder: true
