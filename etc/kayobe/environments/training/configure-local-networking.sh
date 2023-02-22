@@ -21,7 +21,7 @@ seed_hv_private_ip=$(ip a show dev $iface | awk '$1 == "inet" { gsub(/\/[0-9]*/,
 # Forward the following ports to the controller.
 # 80: Horizon
 # 6080: VNC console
-forwarded_ports="80 6080"
+forwarded_ports="80 3000 5601 6080 9091 9093 15672"
 
 # IP of the seed hypervisor on the OpenStack 'public' network created by init-runonce.sh.
 public_ip="10.0.2.1"
