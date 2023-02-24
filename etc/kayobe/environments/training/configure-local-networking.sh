@@ -8,9 +8,8 @@ set -o pipefail
 # IP addresses on the all-in-one Kayobe cloud network.
 # These IP addresses map to those statically configured in
 # etc/kayobe/network-allocation.yml and etc/kayobe/networks.yml.
-controller_vip=192.168.33.2
-seed_hv_ip=192.168.33.4
-seed_vm_ip=192.168.33.5
+controller_vip=192.168.59.2
+seed_hv_ip=192.168.53.4
 
 iface=$(ip route | awk '$1 == "default" {print $5; exit}')
 
@@ -32,24 +31,36 @@ if $(which dnf >/dev/null 2>&1); then
 fi
 
 # Configure local networking.
-# Add a bridge 'braio' for the Kayobe all-in-one cloud network.
-if ! sudo ip l show braio >/dev/null 2>&1; then
-  sudo ip l add braio type bridge
-  sudo ip l set braio up
-  sudo ip a add $seed_hv_ip/24 dev braio
+# Add bridges for the Kayobe networks.
+if ! sudo ip l show brprov >/dev/null 2>&1; then
+    sudo ip l add brprov type bridge
+    sudo ip l set brprov up
+    sudo ip a add $seed_hv_ip/24 dev brprov
 fi
+
+if ! sudo ip l show brcloud >/dev/null 2>&1; then
+    sudo ip l add brcloud type bridge
+    sudo ip l set brcloud up
+fi
+
 # On CentOS 8, bridges without a port are DOWN, which causes network
 # configuration to fail. Add a dummy interface and plug it into the bridge.
-if ! sudo ip l show dummy1 >/dev/null 2>&1; then
-  sudo ip l add dummy1 type dummy
-  sudo ip l set dummy1 up
-  sudo ip l set dummy1 master braio
-fi
+for i in mgmt prov cloud; do
+    if ! sudo ip l show dummy-$i >/dev/null 2>&1; then
+      sudo ip l add dummy-$i type dummy
+    fi
+done
 
 # Configure IP routing and NAT to allow the seed VM and overcloud hosts to
 # route via this route to the outside world.
 sudo iptables -A POSTROUTING -t nat -o $iface -j MASQUERADE
 sudo sysctl -w net.ipv4.conf.all.forwarding=1
+
+# FIXME: IP MASQUERADE from control plane fails without this on Ubuntu.
+if ! $(which dnf >/dev/null 2>&1); then
+    sudo modprobe br_netfilter
+    echo 0 | sudo tee /proc/sys/net/bridge/bridge-nf-call-iptables
+fi
 
 # Configure port forwarding from the hypervisor to the Horizon GUI on the
 # controller.
@@ -63,11 +74,6 @@ for port in $forwarded_ports; do
   # Source NAT.
   sudo iptables -t nat -A POSTROUTING -o braio -p tcp --dport $port -d $controller_vip -j SNAT --to-source $seed_hv_private_ip
 done
-
-# Configure an IP on the 'public' network to allow access to/from the cloud.
-if ! sudo ip a show dev braio | grep $public_ip/24 >/dev/null 2>&1; then
-  sudo ip a add $public_ip/24 dev braio
-fi
 
 echo
 echo "NOTE: The network configuration applied by this script is not"

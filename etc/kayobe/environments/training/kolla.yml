@@ -15,3 +15,4 @@ kolla_enable_grafana: true
 kolla_enable_elasticsearch_curator: true
 
 kolla_enable_cinder: true
+kolla_enable_neutron_provider_networks: true

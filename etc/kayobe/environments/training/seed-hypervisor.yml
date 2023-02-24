@@ -2,6 +2,12 @@
 ###############################################################################
 # Seed hypervisor node configuration.
 
-# User with which to access the seed hypervisor via SSH during bootstrap, in
-# order to setup the Kayobe user account. Default is {{ os_distribution }}.
-seed_hypervisor_bootstrap_user: "{{ os_distribution if os_distribution == 'ubuntu' else 'cloud-user' }}"
+# List of extra networks to which seed hypervisor nodes are attached.
+seed_hypervisor_extra_network_interfaces:
+  - "{{ provision_wl_net_name }}"
+  - "{{ internal_net_name }}"
+  - "{{ public_net_name }}"
+  - "{{ external_net_names[0] }}"
+
+# Workaround change to cloud-user default login name on CentOS-Stream8
+seed_hypervisor_bootstrap_user: "{{ lookup('env', 'USER') }}"

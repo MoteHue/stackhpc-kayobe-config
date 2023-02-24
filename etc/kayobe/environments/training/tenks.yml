@@ -11,7 +11,9 @@ node_types:
       # https://github.com/openstack/ironic-python-agent/blob/master/ironic_python_agent/utils.py#L290
       - capacity: 23GiB
     physical_networks:
-      - physnet1
+      - provision-net
+      - mgmt-net
+      - cloud-net
     console_log_enabled: true
   compute:
     memory_mb: 8192
@@ -21,7 +23,8 @@ node_types:
       # https://github.com/openstack/ironic-python-agent/blob/master/ironic_python_agent/utils.py#L290
       - capacity: 15GiB
     physical_networks:
-      - physnet1
+      - provision-net
+      - cloud-net
     console_log_enabled: true
   storage:
     memory_mb: 10240
@@ -34,7 +37,8 @@ node_types:
       # Ceph volume
       - capacity: 20GiB
     physical_networks:
-      - physnet1
+      - provision-net
+      - cloud-net
     console_log_enabled: true
 
 specs:
@@ -58,13 +62,15 @@ specs:
       network_interface: noop
 
 
-ipmi_address: 192.168.33.4
+ipmi_address: 192.168.53.4
 ipmi_port_range_end: 6250
 
 nova_flavors: []
 
 physnet_mappings:
-  physnet1: braio
+  mgmt-net: brmgmt
+  provision-net: brprov
+  cloud-net: brcloud
 
 bridge_type: linuxbridge
 
