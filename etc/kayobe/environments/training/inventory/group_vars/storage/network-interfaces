@@ -10,8 +10,6 @@ internal_interface: "{{ 'ens3' if os_distribution == 'ubuntu' else 'eth1' }}.{{ 
 
 storage_interface: "{{ 'ens3' if os_distribution == 'ubuntu' else 'eth1' }}.{{ storage_vlan }}"
 
-storage_mgmt_interface: "{{ 'ens3' if os_distribution == 'ubuntu' else 'eth1' }}.{{ storage_mgmt_vlan }}"
-
 ###############################################################################
 # Dummy variable to allow Ansible to accept this file.
 workaround_ansible_issue_8743: yes

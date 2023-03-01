@@ -56,7 +56,7 @@ storage_net_name: storage
 
 # Name of the network used to carry storage management traffic.
 #storage_mgmt_net_name:
-storage_mgmt_net_name: storage_mgmt
+storage_mgmt_net_name: storage
 
 # Name of the network used to carry swift storage data traffic.
 #swift_storage_net_name:
@@ -128,11 +128,6 @@ storage_cidr: 192.168.61.0/24
 storage_mtu: 1450
 storage_vlan: 105
 storage_physical_network: cloud
-
-storage_mgmt_cidr: 192.168.62.0/24
-storage_mgmt_mtu: 1450
-storage_mgmt_vlan: 106
-storage_mgmt_physical_network: cloud
 
 ###############################################################################
 # Network virtual patch link configuration.
