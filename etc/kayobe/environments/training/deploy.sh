@@ -60,6 +60,10 @@ pushd src
 [[ -d kayobe ]] || git clone https://github.com/stackhpc/kayobe.git -b $KAYOBE_BRANCH
 [[ -d kayobe-config ]] || git clone $KAYOBE_CONFIG_REPO kayobe-config -b $KAYOBE_CONFIG_BRANCH
 [[ -d kayobe/tenks ]] || (cd kayobe && git clone https://opendev.org/openstack/tenks.git)
+[[ -d openstack-config ]] || (git clone https://github.com/motehue/openstack-config.git)
+
+# Change hard-coded seed IP in kayobe
+sudo sed -i 's/SEED_IP=.*/SEED_IP="192.168.53.5"/' kayobe/dev/functions
 popd
 
 # Create Kayobe virtualenv
@@ -109,7 +113,7 @@ $KAYOBE_CONFIG_PATH/environments/$KAYOBE_ENVIRONMENT/configure-local-networking.
 #######################################################################
 
 # Add sms lab test pulp to /etc/hosts of seed vm's pulp container
-SEED_IP=192.168.33.5
+SEED_IP=192.168.53.5
 REMOTE_COMMAND="docker exec pulp sh -c 'echo $PULP_HOST | tee -a /etc/hosts'"
 ssh stack@$SEED_IP $REMOTE_COMMAND
 
@@ -139,18 +143,43 @@ $KAYOBE_CONFIG_PATH/environments/$KAYOBE_ENVIRONMENT/configure-local-networking.
 # Inspect and provision the overcloud hardware:
 kayobe overcloud inventory discover
 kayobe overcloud provision
+#kayobe overcloud host command run --command "sudo sed -i 's/BOOTPROTO=.*/BOOTPROTO=none/' /etc/sysconfig/network-scripts/ifcfg-eth1" -l compute,storage
 kayobe overcloud host configure
 kayobe overcloud container image pull
+
+kayobe playbook run $KAYOBE_CONFIG_PATH/ansible/cephadm-deploy.yml
+sleep 30
+kayobe playbook run $KAYOBE_CONFIG_PATH/ansible/cephadm.yml
+kayobe playbook run $KAYOBE_CONFIG_PATH/ansible/cephadm-gather-keys.yml
+
 kayobe overcloud service deploy
 source $KOLLA_CONFIG_PATH/admin-openrc.sh
 kayobe overcloud post configure
 source $KOLLA_CONFIG_PATH/admin-openrc.sh
 
-# Run init-runonce.sh to create test elements in the openstack deployment
 set +u
 deactivate
 set -u
-$KAYOBE_CONFIG_PATH/environments/$KAYOBE_ENVIRONMENT/init-runonce.sh
+# Create Openstack-Config virtualenv
+cd $BASE_PATH
+mkdir -p venvs
+pushd venvs
+if [[ ! -d kayobe ]]; then
+    python3 -m venv os-config-venv
+fi
+popd
+# NOTE: Virtualenv's activate and deactivate scripts reference an unbound variable.
+set +u
+source os-config-venv/bin/activate
+set -u
+pip install -U pip
+pushd $BASE_PATH/src/openstack-config
+pip install -r requirements.txt
+ansible-galaxy role install -p ansible/roles -r requirements.yml
+ansible-galaxy role install -p ansible/collections -r requirements.yml
+source $KOLLA_CONFIG_PATH/admin-openrc.sh
+tools/openstack-config
+popd
 
 # Create a test vm 
 VENV_DIR=$BASE_PATH/venvs/os-venv

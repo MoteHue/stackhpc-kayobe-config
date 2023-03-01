@@ -1,4 +1,10 @@
----
+external_ips:
+  seed-hypervisor: 192.168.58.1
+internal_ips:
+  seed-hypervisor: 192.168.57.3
+mgmt_ips:
+  seed: 192.168.55.2
+  seed-hypervisor: 192.168.55.1
 provision_oc_ips:
   compute0: 192.168.53.6
   compute1: 192.168.53.7
@@ -10,3 +16,7 @@ provision_oc_ips:
   storage0: 192.168.53.8
   storage1: 192.168.53.11
   storage2: 192.168.53.12
+provision_wl_ips:
+  seed-hypervisor: 192.168.56.1
+public_ips:
+  seed-hypervisor: 192.168.59.3
