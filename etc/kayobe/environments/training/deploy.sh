@@ -143,7 +143,7 @@ $KAYOBE_CONFIG_PATH/environments/$KAYOBE_ENVIRONMENT/configure-local-networking.
 # Inspect and provision the overcloud hardware:
 kayobe overcloud inventory discover
 kayobe overcloud provision
-#kayobe overcloud host command run --command "sudo sed -i 's/BOOTPROTO=.*/BOOTPROTO=none/' /etc/sysconfig/network-scripts/ifcfg-eth1" -l compute,storage
+kayobe overcloud host command run --command "sudo sed -i 's/BOOTPROTO=.*/BOOTPROTO=none/' /etc/sysconfig/network-scripts/ifcfg-eth1" -l compute,storage
 kayobe overcloud host configure
 kayobe overcloud container image pull
 
@@ -162,12 +162,10 @@ deactivate
 set -u
 # Create Openstack-Config virtualenv
 cd $BASE_PATH
-mkdir -p venvs
 pushd venvs
-if [[ ! -d kayobe ]]; then
+if [[ ! -d os-config-venv ]]; then
     python3 -m venv os-config-venv
 fi
-popd
 # NOTE: Virtualenv's activate and deactivate scripts reference an unbound variable.
 set +u
 source os-config-venv/bin/activate
@@ -179,6 +177,7 @@ ansible-galaxy role install -p ansible/roles -r requirements.yml
 ansible-galaxy role install -p ansible/collections -r requirements.yml
 source $KOLLA_CONFIG_PATH/admin-openrc.sh
 tools/openstack-config
+popd
 popd
 
 # Create a test vm 
