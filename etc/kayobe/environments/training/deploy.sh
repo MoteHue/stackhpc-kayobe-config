@@ -180,14 +180,32 @@ tools/openstack-config
 popd
 popd
 
-# Create a test vm 
-VENV_DIR=$BASE_PATH/venvs/os-venv
-source $VENV_DIR/bin/activate
++u
+deactivate
+-u
+if [[ ! -d $BASE_PATH/venvs/os-venv ]]; then
+  python3 -m venv $BASE_PATH/venvs/os-venv
+fi
++u
+source $BASE_PATH/venvs/os-venv/bin/activate
+-u
+pip install -U pip
+pip install python-openstackclient
 source $KOLLA_CONFIG_PATH/admin-openrc.sh
+
+if [ ! -f ~/.ssh/id_ecdsa.pub ]; then
+    echo Generating ssh key.
+    ssh-keygen -t ecdsa -N '' -f ~/.ssh/id_ecdsa
+fi
+if [ -r ~/.ssh/id_ecdsa.pub ]; then
+    echo Configuring nova public key and quotas.
+    openstack keypair create --public-key ~/.ssh/id_ecdsa.pub mykey
+fi
+
 echo "Creating test vm:"
-openstack server create --key-name mykey --flavor m1.tiny --image cirros --network demo-net test-vm-1
+openstack server create --key-name mykey --flavor m1.tiny --image cirros --network admin-tenant test-vm-1
 echo "Attaching floating IP:"
-openstack floating ip create public1
+openstack floating ip create external
 openstack server add floating ip test-vm-1 `openstack floating ip list -c ID  -f value`
 echo -e "Done! \nopenstack server list:"
 openstack server list

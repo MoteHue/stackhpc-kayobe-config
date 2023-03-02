@@ -4,16 +4,16 @@
 
 
 [compute]
-compute0 ipmi_address=192.168.33.4 bmc_type=
-compute1 ipmi_address=192.168.33.4 bmc_type=
+compute0 ipmi_address=192.168.53.4 bmc_type=
+compute1 ipmi_address=192.168.53.4 bmc_type=
 
 [controllers]
-controller0 ipmi_address=192.168.33.4 bmc_type=
-controller1 ipmi_address=192.168.33.4 bmc_type=
-controller2 ipmi_address=192.168.33.4 bmc_type=
+controller0 ipmi_address=192.168.53.4 bmc_type=
+controller1 ipmi_address=192.168.53.4 bmc_type=
+controller2 ipmi_address=192.168.53.4 bmc_type=
 
 [storage]
-storage0 ipmi_address=192.168.33.4 bmc_type=
-storage1 ipmi_address=192.168.33.4 bmc_type=
-storage2 ipmi_address=192.168.33.4 bmc_type=
+storage0 ipmi_address=192.168.53.4 bmc_type=
+storage1 ipmi_address=192.168.53.4 bmc_type=
+storage2 ipmi_address=192.168.53.4 bmc_type=
 
