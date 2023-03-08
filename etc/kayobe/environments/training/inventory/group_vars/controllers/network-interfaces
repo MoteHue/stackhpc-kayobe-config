@@ -8,19 +8,25 @@ provision_oc_gateway: 192.168.53.4
 
 mgmt_interface: "{{ 'ens3' if os_distribution == 'ubuntu' else 'eth1' }}"
 
-provision_wl_interface: "br{{ 'ens4' if os_distribution == 'ubuntu' else 'eth2' }}"
+provision_wl_interface: "brbond0"
 provision_wl_bridge_ports:
-  - "{{ 'ens4' if os_distribution == 'ubuntu' else 'eth2' }}"
+  - "bond0"
 
-internal_interface: "{{ 'ens4' if os_distribution == 'ubuntu' else 'eth2' }}.{{ internal_vlan }}"
+internal_interface: "{{ demo_interface }}.{{ internal_vlan }}"
 
-external_interface: "br{{ 'ens4' if os_distribution == 'ubuntu' else 'eth2' }}.{{ external_vlan }}"
+external_interface: "{{ provision_wl_interface }}.{{ external_vlan }}"
 
-public_interface: "{{ 'ens4' if os_distribution == 'ubuntu' else 'eth2' }}.{{ public_vlan }}"
+public_interface: "{{ demo_interface }}.{{ public_vlan }}"
 
-storage_interface: "{{ 'ens4' if os_distribution == 'ubuntu' else 'eth2' }}.{{ storage_vlan }}"
+storage_interface: "{{ demo_interface }}.{{ storage_vlan }}"
 
-tunnel_interface: "{{ 'ens4' if os_distribution == 'ubuntu' else 'eth2' }}.{{ tunnel_vlan }}"
+tunnel_interface: "{{ demo_interface }}.{{ tunnel_vlan }}"
+
+demo_interface: "bond0"
+demo_bond_mode: "active-backup"
+demo_mtu: 1500
+demo_bond_slaves:
+  - "eth2"
 
 ###############################################################################
 # Dummy variable to allow Ansible to accept this file.
