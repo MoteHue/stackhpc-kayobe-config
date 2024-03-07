@@ -1,0 +1,17 @@
+[storage:children]
+storage-ceph
+
+[storage-ceph]
+storage0
+
+[mons:children]
+storage-ceph
+
+[mgrs:children]
+storage-ceph
+
+[osds:children]
+storage-ceph
+
+[rgws:children]
+storage-ceph
