@@ -9,7 +9,7 @@ node_types:
     volumes:
       # There is a minimum disk space capacity requirement of 4GiB when using Ironic Python Agent:
       # https://github.com/openstack/ironic-python-agent/blob/master/ironic_python_agent/utils.py#L290
-      - capacity: 23GiB
+      - capacity: 10GiB
     physical_networks:
       - physnet1
     console_log_enabled: true
@@ -19,7 +19,7 @@ node_types:
     volumes:
       # There is a minimum disk space capacity requirement of 4GiB when using Ironic Python Agent:
       # https://github.com/openstack/ironic-python-agent/blob/master/ironic_python_agent/utils.py#L290
-      - capacity: 15GiB
+      - capacity: 8GiB
     physical_networks:
       - physnet1
     console_log_enabled: true
@@ -29,8 +29,8 @@ node_types:
     volumes:
       # There is a minimum disk space capacity requirement of 4GiB when using Ironic Python Agent:
       # https://github.com/openstack/ironic-python-agent/blob/master/ironic_python_agent/utils.py#L290
-      - capacity: 21GiB
-      - capacity: 15GiB
+      - capacity: 12GiB
+      - capacity: 12GiB
     physical_networks:
       - physnet1
     console_log_enabled: true
@@ -49,7 +49,7 @@ specs:
       resource_class: test-rc
       network_interface: noop
   - type: storage
-    count: 1
+    count: 3
     node_name_prefix: storage
     ironic_config:
       resource_class: test-rc

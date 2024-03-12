@@ -1,5 +1,5 @@
 
-cephadm_image: "quay.io/ceph/ceph:v16.2.5"
+cephadm_image: "quay.io/ceph/ceph:v17.2.7"
 
 cephadm_osd_spec:
   service_type: osd

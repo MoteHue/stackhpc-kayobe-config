@@ -4,3 +4,5 @@ aio_ips:
   seed: 192.168.33.5
   seed-hypervisor: 192.168.33.4
   storage0: 192.168.33.11
+  storage1: 192.168.33.7
+  storage2: 192.168.33.8
